@@ -1,0 +1,8 @@
+{
+	"name": "Gout Project",
+  "version": "0.1.0",
+  "description": "apiDoc for gout project",
+  "private": true,
+  "title": "GP APIDOC",
+  "url": "http://${host}:1234/api"
+}

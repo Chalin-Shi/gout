@@ -1,0 +1,19 @@
+{
+  "package-name": "bdos-customer-center",
+  "package-version": "1.0.0",
+  "git-branch": "master",
+  "docker-build": true,
+  "dependencies": {
+    "mysql": "5.7.18"
+  },
+  "servers": [{
+    "server-name": "office",
+    "server-endpoint": "http://192.168.105.247:8000"
+  }, {
+    "server-name": "prod",
+    "server-endpoint": "http://172.20.4.212:8000"
+  }, {
+    "server-name": "shanghai",
+    "server-endpoint": "http://106.14.156.172:8000"
+  }]
+}
