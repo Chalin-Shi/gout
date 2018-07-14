@@ -7,8 +7,8 @@ import (
 
 	"github.com/fvbock/endless"
 
-	"upgrade/backend/libs/setting"
-	"upgrade/backend/routers"
+	"gout/libs/setting"
+	"gout/routers"
 )
 
 func main() {

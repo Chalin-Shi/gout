@@ -4,16 +4,22 @@ import (
 	"net/http"
 
 	"github.com/casbin/casbin"
+	"github.com/casbin/gorm-adapter"
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
+
+	"gout/libs/setting"
 )
 
 // NewAuthorizer returns the authorizer, uses a Casbin enforcer as input
-func Authz(e *casbin.Enforcer) gin.HandlerFunc {
+func Authz() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		a := &BasicAuthorizer{enforcer: e}
+		adapter := gormadapter.NewAdapter(setting.DBType, setting.DBLink, true)
+		enforcer := casbin.NewEnforcer("conf/authz.conf", adapter)
+		authorizer := &BasicAuthorizer{enforcer}
 
-		if !a.CheckPermission(c.Request) {
-			a.RequirePermission(c.Writer)
+		if !authorizer.CheckPermission(c.Request) {
+			authorizer.RequirePermission(c.Writer)
 		}
 	}
 }
@@ -26,8 +32,9 @@ type BasicAuthorizer struct {
 // GetUserName gets the user name from the request.
 // Currently, only HTTP basic authentication is supported
 func (a *BasicAuthorizer) GetUserName(r *http.Request) string {
-	maid := c.GetStringMap("Maid")
-	name := maid["User"].Name
+	// maid := c.GetStringMap("Maid")
+	// name := maid["User"].Name
+	name := "chalin"
 	return name
 }
 

@@ -3,11 +3,7 @@ package models
 type User struct {
 	Model
 	Email    string `sql:"not null" json:"email"`
-	Company  string `sql:"not null" json:"company"`
-	Position string `sql:"not null" json:"position"`
 	Username string `sql:"not null" json:"username"`
-	Mobile   string `sql:"not null" json:"mobile"`
-	Status   int    `sql:"default: 1" json:"status"`
 }
 
 func ExistUserByID(id int) bool {
@@ -28,16 +24,6 @@ func ExistUserByEmail(email string) bool {
 	}
 
 	return false
-}
-
-func CheckUser(email string, password string) int {
-	var user User
-	db.Select("id").Where("email = ? AND password = ? ", email, password).First(&user)
-	if user.ID > 0 {
-		return user.ID
-	}
-
-	return 0
 }
 
 func GetUserTotal(maps interface{}) (count int) {

@@ -6,7 +6,7 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
 
-	"upgrade/backend/libs/setting"
+	"gout/libs/setting"
 )
 
 type Icon struct {

@@ -15,6 +15,9 @@ var (
 	filename string
 	RunMode  string
 
+	DBType string
+	DBLink string
+
 	Port         int
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
@@ -43,32 +46,6 @@ func init() {
 		log.Fatalf("Fail to parse 'conf/app.ini': %v", err)
 	}
 
-	secLC, err := Cfg.GetSection("license")
-	if err != nil {
-		log.Fatalf("Fail to get section 'license': %v", err)
-	}
-
-	if val := os.Getenv("LC_HOST"); val != "" {
-		secLC.Key("HOST").SetValue(val)
-		Cfg.SaveTo(filename)
-	}
-	if val := os.Getenv("LC_PORT"); val != "" {
-		secLC.Key("PORT").SetValue(val)
-		Cfg.SaveTo(filename)
-	}
-
-	secDB, err := Cfg.GetSection("database")
-	if err != nil {
-		log.Fatalf("Fail to get section 'license': %v", err)
-	}
-	if val := os.Getenv("MYSQL_HOST"); val != "" {
-		secDB.Key("HOST").SetValue(os.Getenv("MYSQL_HOST"))
-		secDB.Key("PORT").SetValue(os.Getenv("MYSQL_PORT"))
-		secDB.Key("USER").SetValue(os.Getenv("MYSQL_USER"))
-		secDB.Key("PASSWORD").SetValue(os.Getenv("MYSQL_PASSWORD"))
-		Cfg.SaveTo(filename)
-	}
-
 	Cfg, err = ini.Load("conf/base.ini", filename)
 	Cfg.BlockMode = false
 	if err != nil {
@@ -76,6 +53,7 @@ func init() {
 	}
 
 	LoadBase()
+	LoadDB()
 	LoadServer()
 	LoadOSS()
 	LoadMail()
@@ -87,6 +65,22 @@ func init() {
 func LoadBase() {
 	RunMode = Cfg.Section("").Key("RUN_MODE").MustString("debug")
 	log.Printf("RunMode = %s", RunMode)
+}
+
+func LoadDB() {
+	sec, err := Cfg.GetSection("database")
+	if err != nil {
+		log.Fatalf("Fail to get section 'database': %v", err)
+	}
+
+	DBType = sec.Key("TYPE").String()
+	dbName := sec.Key("NAME").String()
+
+	user := sec.Key("USER").String()
+	password := sec.Key("PASSWORD").String()
+	host := sec.Key("HOST").String()
+	port := sec.Key("PORT").MustInt()
+	DBLink = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", user, password, host, port, dbName)
 }
 
 func LoadServer() {

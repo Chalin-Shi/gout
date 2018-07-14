@@ -2,19 +2,19 @@ package routers
 
 import (
 	"net/http"
+	"time"
 
-	// "github.com/casbin/casbin"
-	// "github.com/getsentry/raven-go"
-	// "github.com/gin-contrib/gzip"
-	// "github.com/gin-contrib/sentry"
-	// "github.com/gin-contrib/zap"
-	// "go.uber.org/zap"
+	"github.com/getsentry/raven-go"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/gzip"
+	"github.com/gin-contrib/sentry"
+	"github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 
-	"upgrade/backend/controllers/user"
-	"upgrade/backend/libs/setting"
-	// "upgrade/backend/middlewares"
+	"gout/controllers/users"
+	"gout/libs/setting"
+	"gout/middlewares"
 )
 
 func InitRouter() *gin.Engine {
@@ -33,7 +33,7 @@ func InitRouter() *gin.Engine {
 	r.Static("/docs", "./docs")
 
 	// gzip middleware
-	// r.Use(gzip.Gzip(gzip.DefaultCompression))
+	r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	// serve favicon.ico
 	r.Static("/favicon.ico", "/docs/img/favicon.ico")
@@ -46,17 +46,17 @@ func InitRouter() *gin.Engine {
 	})
 
 	// middleware
-	// e := casbin.NewEnforcer("conf/authz.conf", "authz_policy.csv")
-	// r.Use(middlewares.Authz(e))
+	r.Use(middlewares.Authz())
 	// r.Use(middlewares.Logger())
-	// raven.SetDSN(setting.SentryKey)
-	// r.Use(sentry.Recovery(raven.DefaultClient, true))
-	// logger, _ := zap.NewProduction()
-	// r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
+	raven.SetDSN(setting.SentryKey)
+	r.Use(sentry.Recovery(raven.DefaultClient, true))
+	logger, _ := zap.NewProduction()
+	r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 
 	// set api prefix
 	api := r.Group("/api")
-	api.POST("/user/register", user.AddUser)
+	api.GET("/users", users.GetUsers)
+	api.POST("/users", users.AddUser)
 
 	return r
 }

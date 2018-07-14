@@ -3,7 +3,7 @@ package util
 import (
 	"log"
 
-	"upgrade/backend/libs/setting"
+	"gout/libs/setting"
 )
 
 func CheckClusterId(clusterId string) (bool, error) {

@@ -7,7 +7,7 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 
-	"upgrade/backend/libs/setting"
+	"gout/libs/setting"
 )
 
 type Claims struct {

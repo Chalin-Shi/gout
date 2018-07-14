@@ -8,10 +8,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"upgrade/backend/libs/e"
-	"upgrade/backend/libs/setting"
-	"upgrade/backend/libs/util"
-	"upgrade/backend/models"
+	"gout/libs/e"
+	"gout/libs/setting"
+	"gout/libs/util"
+	"gout/models"
 )
 
 func JWT() gin.HandlerFunc {

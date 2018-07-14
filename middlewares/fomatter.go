@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 
-	"upgrade/backend/libs/e"
+	"gout/libs/e"
 )
 
 func Formatter() gin.HandlerFunc {
