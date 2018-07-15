@@ -2,8 +2,12 @@ package models
 
 type User struct {
 	Model
-	Email    string `sql:"not null" json:"email"`
-	Username string `sql:"not null" json:"username"`
+	Posts []Post `json:"posts,omitempty"`
+
+	Email    string `sql:"not null" json:"email" binding:"required"`
+	Username string `sql:"not null" json:"username" binding:"required"`
+	Password string `sql:"not null" json:"password" binding:"required"`
+	GroupId  int    `json:"groupId,omitempty"`
 }
 
 func ExistUserByID(id int) bool {
@@ -32,8 +36,8 @@ func GetUserTotal(maps interface{}) (count int) {
 	return
 }
 
-func GetUsers(limit int, offset int, maps map[string]interface{}) (users []User) {
-	db.Where(maps).Order("updated_at desc").Limit(limit).Offset(offset).Find(&users)
+func GetUsers() (users []User) {
+	db.Order("updated_at desc").Find(&users)
 
 	return
 }
@@ -60,4 +64,11 @@ func DeleteUser(id int) bool {
 	db.Where("id = ?", id).Delete(User{})
 
 	return true
+}
+
+func GetUserPosts(id int) (user User) {
+	db.Where("id = ?", id).First(&user)
+	db.Model(&user).Related(&user.Posts)
+
+	return
 }

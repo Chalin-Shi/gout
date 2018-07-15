@@ -32,7 +32,7 @@ func init() {
 	}
 
 	// db.SingularTable(true)
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&User{}, &Group{}, &Post{})
 	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
 	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
 	db.DB().SetMaxIdleConns(2000)
