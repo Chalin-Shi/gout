@@ -46,7 +46,6 @@ func InitRouter() *gin.Engine {
 	})
 
 	// middleware
-	r.Use(middlewares.Authz())
 	// r.Use(middlewares.Logger())
 	raven.SetDSN(setting.SentryKey)
 	r.Use(sentry.Recovery(raven.DefaultClient, true))
@@ -55,8 +54,11 @@ func InitRouter() *gin.Engine {
 
 	// set api prefix
 	api := r.Group("/api")
-	api.GET("/users", users.GetUsers)
-	api.POST("/users", users.AddUser)
+	api.Use(middlewares.Authz(), middlewares.Formatter())
+	{
+		api.GET("/users", users.GetUsers)
+		api.POST("/users", users.AddUser)
+	}
 
 	return r
 }

@@ -1,12 +1,13 @@
 package users
 
 import (
+  "fmt"
+
   "github.com/astaxie/beego/validation"
   "github.com/gin-gonic/gin"
 
   "gout/libs/e"
   "gout/libs/logging"
-  "gout/libs/util"
   "gout/models"
 )
 
@@ -62,7 +63,9 @@ func AddUser(c *gin.Context) {
 
   valid := validation.Validation{}
   email := user.Email
+  password := user.Password
   valid.Required(email, "email").Message("Email is required")
+  valid.Required(password, "password").Message("Password is required")
 
   if valid.HasErrors() {
     for _, err := range valid.Errors {
@@ -140,41 +143,18 @@ func AddUser(c *gin.Context) {
   *
 */
 func GetUsers(c *gin.Context) {
-  data := make(map[string]interface{})
-  maps := make(map[string]interface{})
-  valid := validation.Validation{}
-
-  name := c.Query("name")
-  if name != "" {
-    maps["name"] = name
-  }
-
+  fmt.Println("here")
+  var users []models.User
   code := e.INVALID_PARAMS
-  if !valid.HasErrors() {
-    limit, start := util.GetPage(c)
 
-    chan1 := make(chan int)
-    chan2 := make(chan []models.User)
-    go func() {
-      chan1 <- models.GetUserTotal(maps)
-    }()
-    go func() {
-      chan2 <- models.GetUsers(limit, start, maps)
-    }()
-    total := <-chan1
-    data["list"] = <-chan2
-
-    data["pagination"] = map[string]int{"total": total, "limit": limit, "start": start}
-    code = e.SUCCESS
-  } else {
-    for _, err := range valid.Errors {
-      logging.Info(err.Key, err.Message)
+  defer func() {
+    response := map[string]interface{}{
+      "status": code,
+      "data":   users,
     }
-  }
+    c.Set("response", response)
+  }()
 
-  response := map[string]interface{}{
-    "status": code,
-    "data":   data,
-  }
-  c.Set("response", response)
+  users = models.GetUsers()
+  code = e.SUCCESS
 }
