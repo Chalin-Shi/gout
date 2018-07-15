@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
+	"gout/controllers/user"
 	"gout/controllers/users"
 	"gout/libs/setting"
 	"gout/middlewares"
@@ -47,17 +48,19 @@ func InitRouter() *gin.Engine {
 
 	// middleware
 	// r.Use(middlewares.Logger())
-	raven.SetDSN(setting.SentryKey)
-	r.Use(sentry.Recovery(raven.DefaultClient, true))
+	// raven.SetDSN(setting.SentryKey)
+	// r.Use(sentry.Recovery(raven.DefaultClient, true))
 	logger, _ := zap.NewProduction()
 	r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 
 	// set api prefix
 	api := r.Group("/api")
-	api.Use(middlewares.Authz(), middlewares.Formatter())
+	api.POST("/auth/login", user.AuthUser)
+	api.Use(middlewares.JWT(), middlewares.Authz(), middlewares.Formatter())
 	{
 		api.GET("/users", users.GetUsers)
 		api.POST("/users", users.AddUser)
+		api.GET("/users/:id", users.GetUserById)
 	}
 
 	return r

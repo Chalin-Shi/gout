@@ -1,8 +1,6 @@
 package util
 
 import (
-	// "crypto/md5"
-	// "encoding/hex"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -11,8 +9,7 @@ import (
 )
 
 type Claims struct {
-	ID        int    `json:"id"`
-	CLUSTERID string `json:"clusterId"`
+	ID int `json:"id"`
 	jwt.StandardClaims
 }
 
@@ -22,7 +19,6 @@ func GenerateToken(id int) (string, error) {
 
 	claims := Claims{
 		id,
-		"",
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "linktimecloud",

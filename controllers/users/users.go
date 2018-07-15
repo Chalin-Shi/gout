@@ -3,11 +3,13 @@ package users
 import (
   "fmt"
 
+  "github.com/Unknwon/com"
   "github.com/astaxie/beego/validation"
   "github.com/gin-gonic/gin"
 
   "gout/libs/e"
   "gout/libs/logging"
+  "gout/libs/util"
   "gout/models"
 )
 
@@ -66,6 +68,7 @@ func AddUser(c *gin.Context) {
   password := user.Password
   valid.Required(email, "email").Message("Email is required")
   valid.Required(password, "password").Message("Password is required")
+  user.Password = util.Encrypt(password)
 
   if valid.HasErrors() {
     for _, err := range valid.Errors {
@@ -157,4 +160,73 @@ func GetUsers(c *gin.Context) {
 
   users = models.GetUsers()
   code = e.SUCCESS
+}
+
+/**
+  * @api {get} /users/:id GET_USERS_UID
+  * @apiName GET_USERS_UID
+  * @apiGroup Users
+  * @apiPermission Authorization User
+  *
+  * @apiParam {String} id User unique id.
+  * @apiParamExample {json} Request-Example:
+    {
+      "id": 1
+    }
+  *
+  * @apiSuccess {String} status Status code.
+  * @apiSuccess {Object} data Result of user.
+  * @apiSuccess {String} data.id User unique id.
+  * @apiSuccess {String} data.email User unique email.
+  * @apiSuccess {Number} data.name User name.
+  * @apiSuccess {String} data.avatar User avatar.
+  * @apiSuccess {Timestamp} data.createdAt User createdAt.
+  * @apiSuccess {Timestamp} data.updatedAt User updatedAt.
+  * @apiSuccess {Object} message Descrpition within status code.
+  * @apiSuccess {String} message.desc Detail descrption.
+  *
+  * @apiSuccessExample {json} Success-Response:
+    HTTP/1.1 200 OK
+    {
+      "status": "100000",
+      "data": {
+        "id": 1,
+        "email": "Chalin@123.com",
+        "name": "Chalin",
+        "avatar": "http://bdos-ticket-system.oss-cn-shanghai.aliyuncs.com/avatar.jpg",
+        "createdAt": 1521113735000,
+        "updatedAt": 1521113735000
+      },
+      "message": {
+        "desc": "Success"
+      }
+    }
+  *
+*/
+func GetUserById(c *gin.Context) {
+  id := com.StrTo(c.Param("id")).MustInt()
+
+  valid := validation.Validation{}
+  valid.Min(id, 1, "id").Message("ID must greater than 0")
+
+  code := e.INVALID_PARAMS
+  var data interface{}
+  if !valid.HasErrors() {
+    if models.ExistUserByID(id) {
+      data = models.GetUser(id)
+      code = e.SUCCESS
+    } else {
+      code = e.RECORD_NOT_EXIST
+    }
+  } else {
+    for _, err := range valid.Errors {
+      logging.Info(err.Key, err.Message)
+    }
+  }
+
+  response := map[string]interface{}{
+    "status": code,
+    "data":   data,
+  }
+  c.Set("response", response)
 }

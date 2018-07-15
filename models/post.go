@@ -2,9 +2,9 @@ package models
 
 type Post struct {
 	Model
-	Title   string `sql:"not null" json:"title" binding:"required"`
-	Desc    string `sql:"not null" json:"desc" binding:"required"`
-	Content string `sql:"not null;type:text" json:"content" binding:"required"`
+	Title   string `sql:"not null" json:"title"`
+	Desc    string `sql:"not null" json:"desc"`
+	Content string `sql:"not null;type:text" json:"content"`
 	UserId  int    `json:"postId,omitempty"`
 }
 

@@ -4,8 +4,8 @@ type Group struct {
 	Model
 	Users []User `json:"users,omitempty"`
 
-	Name string `sql:"not null" json:"name" binding:"required"`
-	Desc string `sql:"type:text;not null" json:"desc" binding:"required"`
+	Name string `sql:"not null" json:"name"`
+	Desc string `sql:"not null" json:"desc"`
 }
 
 func ExistGroupByID(id int) bool {

@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/casbin/casbin"
@@ -8,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 
+	"gout/libs/e"
 	"gout/libs/setting"
 	"gout/models"
 )
@@ -33,25 +35,26 @@ type BasicAuthorizer struct {
 
 // GetUserName gets the user name from the request.
 // Currently, only HTTP basic authentication is supported
-func (a *BasicAuthorizer) GetUserName(c *gin.Context) string {
+func (a *BasicAuthorizer) GetUserGroup(c *gin.Context) int {
 	maid := c.GetStringMap("Maid")
 	user := maid["User"].(models.User)
-	return user.Username
+	return user.GroupId
 }
 
 // CheckPermission checks the user/method/path combination from the request.
 // Returns true (permission granted) or false (permission forbidden)
 func (a *BasicAuthorizer) CheckPermission(c *gin.Context) bool {
-	user := a.GetUserName(c)
+	groupId := fmt.Sprintf("%d", a.GetUserGroup(c))
 	method := c.Request.Method
 	path := c.Request.URL.Path
-	return a.enforcer.Enforce(user, path, method)
+	return a.enforcer.Enforce(groupId, path, method)
 }
 
 // RequirePermission returns the 403 Forbidden to the client
 func (a *BasicAuthorizer) RequirePermission(c *gin.Context) {
 	c.JSON(http.StatusForbidden, gin.H{
-		"message": "Permission denied",
+		"status":  e.PERMISSION_DENIED,
+		"message": e.GetMsg(e.PERMISSION_DENIED),
 	})
 	c.Abort()
 	return

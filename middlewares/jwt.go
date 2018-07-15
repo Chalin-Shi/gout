@@ -1,8 +1,6 @@
 package middlewares
 
 import (
-	"errors"
-	"log"
 	"net/http"
 	"strings"
 
@@ -17,10 +15,9 @@ import (
 func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var data = make(map[string]interface{})
-		code := e.SUCCESS
+		code := e.ERROR_AUTH
 		defer func() {
-			if r := recover(); r != nil {
-				log.Println("Recovered : ", r)
+			if code != e.SUCCESS {
 				c.JSON(http.StatusUnauthorized, gin.H{
 					"status":  code,
 					"message": e.GetMsg(code),
@@ -31,51 +28,30 @@ func JWT() gin.HandlerFunc {
 			}
 		}()
 
-		secret := setting.Secret
-		XProxyHeader := c.GetHeader("X-Special-Proxy-Header")
 		token := c.GetHeader("Authorization")
-		if XProxyHeader != "" {
-			secret = setting.BDOSSecret
-			token = XProxyHeader
-		} else {
-			t := strings.Split(token, "Bearer ")
-			if len(t) < 2 {
-				code = e.ERROR_AUTH
-				return
-			}
-			token = t[1]
+		if token == "" {
+			return
+		}
+		t := strings.Split(token, "Bearer ")
+		if len(t) < 2 {
+			return
 		}
 
-		claims, err := util.ParseToken(token, secret)
+		claims, err := util.ParseToken(t[1], setting.Secret)
 		if err != nil {
 			code = e.ERROR_AUTH_CHECK_TOKEN_EXPIRED
 			return
 		}
 
-		clusterId := claims.CLUSTERID
 		id := claims.ID
-		maid := make(map[string]interface{})
-		if clusterId != "" {
-			status, err := util.CheckClusterId(clusterId)
-			if !status || err != nil {
-				code = e.VALIDATION_ERROR
-				return
-			}
-		} else if id > 0 {
-			if !models.ExistUserByID(id) {
-				code = e.RECORD_NOT_EXIST
-				return
-			}
-			user := models.GetUser(id)
-			maid["User"] = user
-		} else {
-			code = e.ERROR_AUTH
+		if !models.ExistUserByID(id) {
+			code = e.RECORD_NOT_EXIST
 			return
 		}
+		user := models.GetUser(id)
+		maid := map[string]interface{}{"User": user}
 		c.Set("Maid", maid)
-		if code != e.SUCCESS {
-			panic(errors.New(code))
-		}
+		code = e.SUCCESS
 
 		c.Next()
 	}

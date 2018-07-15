@@ -4,9 +4,9 @@ type User struct {
 	Model
 	Posts []Post `json:"posts,omitempty"`
 
-	Email    string `sql:"not null" json:"email" binding:"required"`
-	Username string `sql:"not null" json:"username" binding:"required"`
-	Password string `sql:"not null" json:"password" binding:"required"`
+	Email    string `sql:"not null" json:"email"`
+	Username string `sql:"not null" json:"username"`
+	Password string `sql:"not null" json:"password"`
 	GroupId  int    `json:"groupId,omitempty"`
 }
 
@@ -28,6 +28,16 @@ func ExistUserByEmail(email string) bool {
 	}
 
 	return false
+}
+
+func CheckUser(email string, password string) int {
+	var user User
+	db.Select("id").Where("email = ? AND password = ? ", email, password).First(&user)
+	if user.ID > 0 {
+		return user.ID
+	}
+
+	return 0
 }
 
 func GetUserTotal(maps interface{}) (count int) {
