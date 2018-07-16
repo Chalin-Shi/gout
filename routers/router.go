@@ -48,8 +48,8 @@ func InitRouter() *gin.Engine {
 
 	// middleware
 	// r.Use(middlewares.Logger())
-	// raven.SetDSN(setting.SentryKey)
-	// r.Use(sentry.Recovery(raven.DefaultClient, true))
+	raven.SetDSN(setting.SentryKey)
+	r.Use(sentry.Recovery(raven.DefaultClient, true))
 	logger, _ := zap.NewProduction()
 	r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 

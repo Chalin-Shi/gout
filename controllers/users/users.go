@@ -1,8 +1,6 @@
 package users
 
 import (
-  "fmt"
-
   "github.com/Unknwon/com"
   "github.com/astaxie/beego/validation"
   "github.com/gin-gonic/gin"
@@ -146,7 +144,6 @@ func AddUser(c *gin.Context) {
   *
 */
 func GetUsers(c *gin.Context) {
-  fmt.Println("here")
   var users []models.User
   code := e.INVALID_PARAMS
 

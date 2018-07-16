@@ -6,7 +6,7 @@ type User struct {
 
 	Email    string `sql:"not null" json:"email"`
 	Username string `sql:"not null" json:"username"`
-	Password string `sql:"not null" json:"password"`
+	Password string `sql:"not null" json:"password,omitempty"`
 	GroupId  int    `json:"groupId,omitempty"`
 }
 
@@ -47,7 +47,7 @@ func GetUserTotal(maps interface{}) (count int) {
 }
 
 func GetUsers() (users []User) {
-	db.Order("updated_at desc").Find(&users)
+	db.Select("id, email, username, created_at, updated_at, group_id").Order("updated_at desc").Find(&users)
 
 	return
 }
