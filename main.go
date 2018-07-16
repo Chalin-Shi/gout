@@ -6,6 +6,7 @@ import (
 	"syscall"
 
 	"github.com/fvbock/endless"
+	"github.com/robfig/cron"
 
 	"gout/libs/setting"
 	"gout/routers"
@@ -26,4 +27,15 @@ func main() {
 	if err != nil {
 		log.Printf("Server err: %v", err)
 	}
+
+	c := cron.New()
+	spec := "*/5 * * * * ?"
+	i := 0
+	c.AddFunc(spec, func() {
+		i++
+		log.Println("cron running:", i)
+	})
+	c.Start()
+
+	select {}
 }
