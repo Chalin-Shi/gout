@@ -24,6 +24,7 @@ func Authz() gin.HandlerFunc {
 		if !authorizer.CheckPermission(c) {
 			authorizer.RequirePermission(c)
 		}
+		c.Set("Enforcer", enforcer)
 		c.Next()
 	}
 }
