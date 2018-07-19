@@ -86,7 +86,6 @@ func AddPolicy(c *gin.Context) {
     enforcer = en.(*casbin.Enforcer)
   }
   enforcer.AddPolicy(fmt.Sprintf("%d", id), path, method)
-  enforcer.SavePolicy()
 
   code = e.SUCCESS
 }
@@ -160,7 +159,6 @@ func DelPolicy(c *gin.Context) {
     enforcer = en.(*casbin.Enforcer)
   }
   enforcer.RemovePolicy(fmt.Sprintf("%d", id), path, method)
-  enforcer.SavePolicy()
 
   code = e.SUCCESS
 }
