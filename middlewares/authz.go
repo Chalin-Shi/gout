@@ -36,16 +36,20 @@ type BasicAuthorizer struct {
 
 // GetUserName gets the user name from the request.
 // Currently, only HTTP basic authentication is supported
-func (a *BasicAuthorizer) GetUserGroup(c *gin.Context) int {
+func (a *BasicAuthorizer) GetUserAuthe(c *gin.Context) string {
 	maid := c.GetStringMap("Maid")
 	user := maid["User"].(models.User)
-	return user.GroupId
+	authe := user.Username
+	if authe != "root" {
+		authe = fmt.Sprintf("%d", user.GroupId)
+	}
+	return authe
 }
 
 // CheckPermission checks the user/method/path combination from the request.
 // Returns true (permission granted) or false (permission forbidden)
 func (a *BasicAuthorizer) CheckPermission(c *gin.Context) bool {
-	groupId := fmt.Sprintf("%d", a.GetUserGroup(c))
+	groupId := fmt.Sprintf("%d", a.GetUserAuthe(c))
 	method := c.Request.Method
 	path := c.Request.URL.Path
 	return a.enforcer.Enforce(groupId, path, method)
