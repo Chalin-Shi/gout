@@ -49,10 +49,10 @@ func (a *BasicAuthorizer) GetUserAuthe(c *gin.Context) string {
 // CheckPermission checks the user/method/path combination from the request.
 // Returns true (permission granted) or false (permission forbidden)
 func (a *BasicAuthorizer) CheckPermission(c *gin.Context) bool {
-	groupId := fmt.Sprintf("%d", a.GetUserAuthe(c))
+	authe := a.GetUserAuthe(c)
 	method := c.Request.Method
 	path := c.Request.URL.Path
-	return a.enforcer.Enforce(groupId, path, method)
+	return a.enforcer.Enforce(authe, path, method)
 }
 
 // RequirePermission returns the 403 Forbidden to the client
