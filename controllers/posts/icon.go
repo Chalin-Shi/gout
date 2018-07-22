@@ -1,4 +1,4 @@
-package app
+package posts
 
 import (
 	"encoding/json"

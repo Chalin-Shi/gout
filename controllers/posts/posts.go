@@ -1,4 +1,4 @@
-package user
+package posts
 
 import (
 	"time"
