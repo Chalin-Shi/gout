@@ -41,7 +41,7 @@ func (a *BasicAuthorizer) GetUserAuthe(c *gin.Context) string {
 	user := maid["User"].(models.User)
 	authe := user.Username
 	if authe != "root" {
-		authe = fmt.Sprintf("%d", user.GroupId)
+		authe = fmt.Sprintf("%d", user.ID)
 	}
 	return authe
 }
