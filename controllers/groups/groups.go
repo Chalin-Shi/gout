@@ -1,15 +1,16 @@
 package groups
 
 import (
-  "time"
+  "fmt"
 
   "github.com/Unknwon/com"
   "github.com/astaxie/beego/validation"
+  "github.com/casbin/casbin"
   "github.com/gin-gonic/gin"
 
   "gout/libs/e"
   "gout/libs/logging"
-  "gout/libs/util"
+  // "gout/libs/util"
   "gout/models"
 )
 
@@ -74,12 +75,12 @@ func GetGroupUsers(c *gin.Context) {
     return
   }
 
-  if !models.ExistGroupByID(id) {
-    code = e.RECORD_NOT_EXIST
-    return
-  }
+  // if !models.ExistGroupByID(id) {
+  //   code = e.RECORD_NOT_EXIST
+  //   return
+  // }
 
-  data["list"] = models.GetUsersByGroupId(id)
+  // data["list"] = models.GetUsersByGroupId(id)
   code = e.SUCCESS
 }
 
@@ -152,23 +153,23 @@ func GetGroupUser(c *gin.Context) {
     return
   }
 
-  chan1 := make(chan models.User)
-  chan2 := make(chan models.Group)
-  go func() {
-    chan1 <- models.GetUser(groupId)
-  }()
-  go func() {
-    chan2 <- models.GetGroupByUserId(groupId, id)
-  }()
-  group := <-chan1
-  post := <-chan2
-  data["groupId"] = group.ID
-  data["groupname"] = group.Username
-  data["id"] = post.ID
-  data["title"] = post.Name
-  data["content"] = post.Content
-  data["desc"] = post.Desc
-  data["updatedAt"] = post.UpdatedAt
+  // chan1 := make(chan models.User)
+  // chan2 := make(chan models.Group)
+  // go func() {
+  //   chan1 <- models.GetUser(groupId)
+  // }()
+  // go func() {
+  //   chan2 <- models.GetGroupByUserId(groupId, id)
+  // }()
+  // group := <-chan1
+  // post := <-chan2
+  // data["groupId"] = group.ID
+  // data["groupname"] = group.Username
+  // data["id"] = post.ID
+  // data["title"] = post.Name
+  // data["content"] = post.Content
+  // data["desc"] = post.Desc
+  // data["updatedAt"] = post.UpdatedAt
   code = e.SUCCESS
 }
 
@@ -235,12 +236,19 @@ func AddGroupUser(c *gin.Context) {
     return
   }
 
-  if models.ExistGroupByUserId(groupId, title) {
-    code = e.RECORD_HAS_EXISTED
+  if !models.ExistGroupByID(groupId) {
+    code = e.RECORD_NOT_EXIST
     return
   }
 
-  models.AddGroup(post)
+  models.EditUser(id, map[string]int{"group_id": groupId})
+
+  var enforcer *casbin.Enforcer
+  if en, ok := c.Get("Enforcer"); ok {
+    enforcer = en.(*casbin.Enforcer)
+  }
+  enforcer.AddGroupingPolicy(fmt.Sprintf("u_%d", id), fmt.Sprintf("g_%d", groupId))
+
   code = e.SUCCESS
 }
 
@@ -304,17 +312,17 @@ func EditGroup(c *gin.Context) {
     return
   }
 
-  if !models.ExistGroupByUserId(id, name) {
-    code = e.RECORD_NOT_EXIST
-    return
-  }
+  // if !models.ExistGroupByUserId(id, name) {
+  //   code = e.RECORD_NOT_EXIST
+  //   return
+  // }
 
-  var post models.Group
-  if err := c.ShouldBindJSON(&post); err != nil {
-    return
-  }
+  // var post models.Group
+  // if err := c.ShouldBindJSON(&post); err != nil {
+  //   return
+  // }
 
-  models.EditGroupByUserId(id, post)
+  // models.EditGroupByUserId(id, post)
   code = e.SUCCESS
 }
 
@@ -369,11 +377,11 @@ func DeleteGroup(c *gin.Context) {
     return
   }
 
-  if !models.ExistGroupByUserId(id, name) {
-    code = e.RECORD_NOT_EXIST
-    return
-  }
+  // if !models.ExistGroupByUserId(id, name) {
+  //   code = e.RECORD_NOT_EXIST
+  //   return
+  // }
 
-  models.DeleteGroupByUserId(id, name)
+  // models.DeleteGroupByUserId(id, name)
   code = e.SUCCESS
 }

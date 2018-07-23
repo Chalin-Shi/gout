@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
+	"gout/controllers/groups"
 	"gout/controllers/policy"
 	"gout/controllers/user"
 	"gout/controllers/users"
@@ -63,6 +64,8 @@ func InitRouter() *gin.Engine {
 		api.GET("/users", users.GetUsers)
 		api.POST("/users", users.AddUser)
 		api.GET("/users/:id", users.GetUserById)
+		// groups
+		api.POST("/groups/:groupId/users/:id", groups.AddGroupUser)
 		//policy
 		api.POST("/policy", policy.AddPolicy)
 		api.DELETE("/policy", policy.DelPolicy)

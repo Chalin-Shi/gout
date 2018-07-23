@@ -28,7 +28,7 @@ type Policy struct {
   * @apiParam (Authorization) {String} token Only admin policy can post this.
   * @apiParamExample {json} Request-Example:
     {
-      "id": 1,
+      "id": "g_1",
       "path": "/api/users/:id",
       "method": "GET"
     }
@@ -101,7 +101,7 @@ func AddPolicy(c *gin.Context) {
   * @apiParam (Authorization) {String} token Only admin policy can post this.
   * @apiParamExample {json} Request-Example:
     {
-      "id": 1,
+      "id": "g_1",
       "path": "/api/users/:id",
       "method": "GET"
     }
