@@ -7,11 +7,11 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 
-	"upgrade/backend/libs/e"
-	"upgrade/backend/libs/logging"
-	"upgrade/backend/libs/setting"
-	"upgrade/backend/libs/util"
-	"upgrade/backend/models"
+	"gout/libs/e"
+	"gout/libs/logging"
+	"gout/libs/setting"
+	"gout/libs/util"
+	"gout/models"
 )
 
 /**

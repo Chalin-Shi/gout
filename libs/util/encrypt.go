@@ -7,7 +7,7 @@ import (
 	"hash"
 	"io"
 
-	"upgrade/backend/libs/setting"
+	"gout/libs/setting"
 )
 
 func Encrypt(origin string, algorithm string) string {
