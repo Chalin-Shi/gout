@@ -1,13 +1,14 @@
 package models
 
 import (
-	"log"
+	"fmt"
 	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"gout/libs/setting"
+	"gout/libs/util"
 )
 
 var db *gorm.DB
@@ -24,7 +25,7 @@ func init() {
 	db, err = gorm.Open(setting.DBType, setting.DBLink)
 
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 	}
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
@@ -35,6 +36,10 @@ func init() {
 	db.AutoMigrate(&User{}, &Group{}, &Post{})
 	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
 	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
+	var root User
+	if err := db.Where(User{Email: "chalinsmith@gmail.com"}).Attrs(User{Username: "root", Password: util.Encrypt("123456", "sha256")}).FirstOrCreate(&root).Error; err != nil {
+		fmt.Printf("Should not raise any error, but got %v", err)
+	}
 	db.DB().SetMaxIdleConns(2000)
 	db.DB().SetMaxOpenConns(1000)
 }

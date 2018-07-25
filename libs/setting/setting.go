@@ -24,13 +24,10 @@ var (
 	OSS          map[string]string
 	Mail         map[string]string
 
-	Limit      string
-	Offset     string
-	Secret     string
-	SentryKey  string
-	BDOSSecret string
-
-	LicenseRestValid string
+	Limit     string
+	Offset    string
+	Secret    string
+	SentryKey string
 )
 
 func init() {
@@ -57,8 +54,6 @@ func init() {
 	LoadServer()
 	LoadOSS()
 	LoadMail()
-	LoadBDOS()
-	LoadLicenseRest()
 	LoadApp()
 }
 
@@ -123,23 +118,6 @@ func LoadMail() {
 	Mail["apiUser"] = sec.Key("APIUser").String()
 	Mail["from"] = sec.Key("From").String()
 	Mail["fromName"] = sec.Key("FromName").String()
-}
-
-func LoadBDOS() {
-	sec, err := Cfg.GetSection("bdos")
-	if err != nil {
-		log.Fatalf("Fail to get section 'bdos': %v", err)
-	}
-	BDOSSecret = sec.Key("SECRET").String()
-}
-
-func LoadLicenseRest() {
-	sec, err := Cfg.GetSection("license.rest")
-	if err != nil {
-		log.Fatalf("Fail to get section 'license': %v", err)
-	}
-	LicenseRestValid = sec.Key("VALID").String()
-	log.Printf("LicenseRestValid = %s", LicenseRestValid)
 }
 
 func LoadApp() {

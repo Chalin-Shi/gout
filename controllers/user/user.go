@@ -75,7 +75,7 @@ func AuthUser(c *gin.Context) {
     return
   }
 
-  id := models.CheckUser(email, util.Encrypt(password))
+  id := models.CheckUser(email, util.Encrypt(password, "sha256"))
   if id == 0 {
     code = e.PASSWORD_NOT_MATCH
     return
@@ -210,12 +210,12 @@ func PutUserPassword(c *gin.Context) {
   }
 
   email := user.Email
-  ok := models.CheckUser(email, util.Encrypt(passwd.Origin))
+  ok := models.CheckUser(email, util.Encrypt(passwd.Origin, "sha256"))
   if ok == 0 {
     code = e.ORIGIN_PASSWORD_ERROR
     return
   }
 
-  models.EditUser(id, map[string]string{"password": util.Encrypt(passwd.Password)})
+  models.EditUser(id, map[string]string{"password": util.Encrypt(passwd.Password, "sha256")})
   code = e.SUCCESS
 }

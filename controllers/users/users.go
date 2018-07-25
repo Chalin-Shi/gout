@@ -66,7 +66,7 @@ func AddUser(c *gin.Context) {
   password := user.Password
   valid.Required(email, "email").Message("Email is required")
   valid.Required(password, "password").Message("Password is required")
-  user.Password = util.Encrypt(password)
+  user.Password = util.Encrypt(password, "sha256")
 
   if valid.HasErrors() {
     for _, err := range valid.Errors {
