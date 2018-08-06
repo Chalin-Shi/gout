@@ -142,6 +142,67 @@ func GetUser(c *gin.Context) {
 }
 
 /**
+  * @api {put} /user/avatar PUT_USER_AVATAR
+  * @apiName PUT_USER_AVATAR
+  * @apiGroup User
+  * @apiPermission Authorization User
+  *
+  * @apiParam {String} file File stream.
+  * @apiParam (Authorization) {String} token Only admin user can post this.
+  * @apiParamExample {json} Request-Example:
+    {
+      "file": "stream"
+    }
+  *
+  * @apiSuccess {String} status Status code.
+  * @apiSuccess {Object} data Data result.
+  * @apiSuccess {Number} data.id User unique id.
+  * @apiSuccess {String} data.avatar User avatar.
+  * @apiSuccess {Object} message Descrpition within status code.
+  * @apiSuccess {String} message.desc Detail descrption.
+  *
+  * @apiSuccessExample {json} Success-Response:
+    {
+      "status": "100000",
+      "data": {
+        "id": 1,
+        "avatar": "http://bdos-ticket-system.oss-cn-shanghai.aliyuncs.com/avatar.jpg"
+      },
+      "message": {
+        "desc": "Success"
+      }
+    }
+  *
+*/
+func PutUserAvatar(c *gin.Context) {
+  maid := c.GetStringMap("Maid")
+  user := maid["User"].(models.User)
+  id := user.ID
+  code := e.INVALID_PARAMS
+  avatar := setting.OSS["Avatar"]
+
+  defer func() {
+    response := map[string]interface{}{
+      "status": code,
+      "data":   map[string]interface{}{"id": id, "avatar": avatar},
+    }
+    c.Set("response", response)
+  }()
+
+  name := util.Encrypt(user.Email, "md5")
+  file, err := util.PutObject(c, name)
+  if err != nil {
+    code = e.FILE_UPLOAD_FAILED
+    return
+  }
+  avatar = file.Link
+  data := map[string]string{"avatar": avatar}
+
+  models.EditUser(id, data)
+  code = e.SUCCESS
+}
+
+/**
   * @api {put} /user/password PUT_USER_PASSWORD
   * @apiName PUT_USER_PASSWORD
   * @apiGroup User

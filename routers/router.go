@@ -64,6 +64,10 @@ func InitRouter() *gin.Engine {
 		api.GET("/users", users.GetUsers)
 		api.POST("/users", users.AddUser)
 		api.GET("/users/:id", users.GetUserById)
+		// user
+		api.GET("/user", user.GetUser)
+		api.PUT("/user/avatar", user.PutUserAvatar)
+		api.PUT("/user/password", user.PutUserPassword)
 		// groups
 		api.POST("/groups/:groupId/users/:id", groups.AddGroupUser)
 		//policy

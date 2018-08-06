@@ -15,13 +15,6 @@ type Icon struct {
 }
 
 func PutObject(c *gin.Context) (*Icon, error) {
-	// file, _ := c.FormFile("file")
-	// filename := file.Filename
-	// stream, err := file.Open()
-	// if err != nil {
-	// 	return nil, err
-	// }
-
 	file, header, err := c.Request.FormFile("file")
 	filename := header.Filename
 
