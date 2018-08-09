@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"path"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
@@ -14,9 +15,15 @@ type Icon struct {
 	Link string `json:"link"`
 }
 
-func PutObject(c *gin.Context) (*Icon, error) {
+func PutObject(c *gin.Context, name string) (*Icon, error) {
 	file, header, err := c.Request.FormFile("file")
+	if err != nil {
+		return nil, err
+	}
 	filename := header.Filename
+	if name != "" {
+		filename = fmt.Sprintf("%s%s", name, path.Ext(filename))
+	}
 
 	if setting.RunMode != "release" {
 		link := fmt.Sprintf("http://192.168.206.134:%d/static/icons/dashboard.icon.png", setting.Port)

@@ -8,6 +8,7 @@ import (
 
   "gout/libs/e"
   "gout/libs/logging"
+  "gout/libs/setting"
   "gout/libs/util"
   "gout/models"
 )
