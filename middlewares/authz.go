@@ -9,9 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 
-	"gout/libs/e"
-	"gout/libs/setting"
-	"gout/models"
+	"github.com/Chalin-Shi/gout/libs/e"
+	"github.com/Chalin-Shi/gout/libs/setting"
+	"github.com/Chalin-Shi/gout/models"
 )
 
 // NewAuthorizer returns the authorizer, uses a Casbin enforcer as input

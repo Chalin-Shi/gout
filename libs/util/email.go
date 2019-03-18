@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"time"
 
-	"gout/libs/setting"
+	"github.com/Chalin-Shi/gout/libs/setting"
 )
 
 func SendMail(params map[string]string) (bool, error) {

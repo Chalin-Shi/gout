@@ -12,12 +12,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"gout/controllers/groups"
-	"gout/controllers/policy"
-	"gout/controllers/user"
-	"gout/controllers/users"
-	"gout/libs/setting"
-	"gout/middlewares"
+	"github.com/Chalin-Shi/gout/controllers/groups"
+	"github.com/Chalin-Shi/gout/controllers/policy"
+	"github.com/Chalin-Shi/gout/controllers/user"
+	"github.com/Chalin-Shi/gout/controllers/users"
+	"github.com/Chalin-Shi/gout/libs/setting"
+	"github.com/Chalin-Shi/gout/middlewares"
 )
 
 func InitRouter() *gin.Engine {

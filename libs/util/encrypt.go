@@ -7,7 +7,7 @@ import (
 	"hash"
 	"io"
 
-	"gout/libs/setting"
+	"github.com/Chalin-Shi/gout/libs/setting"
 )
 
 func Encrypt(origin string, algorithm string) string {

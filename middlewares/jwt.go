@@ -6,10 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"gout/libs/e"
-	"gout/libs/setting"
-	"gout/libs/util"
-	"gout/models"
+	"github.com/Chalin-Shi/gout/libs/e"
+	"github.com/Chalin-Shi/gout/libs/setting"
+	"github.com/Chalin-Shi/gout/libs/util"
+	"github.com/Chalin-Shi/gout/models"
 )
 
 func JWT() gin.HandlerFunc {

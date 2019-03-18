@@ -7,11 +7,11 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 
-	"gout/libs/e"
-	"gout/libs/logging"
-	"gout/libs/setting"
-	"gout/libs/util"
-	"gout/models"
+	"github.com/Chalin-Shi/gout/libs/e"
+	"github.com/Chalin-Shi/gout/libs/logging"
+	"github.com/Chalin-Shi/gout/libs/setting"
+	"github.com/Chalin-Shi/gout/libs/util"
+	"github.com/Chalin-Shi/gout/models"
 )
 
 /**

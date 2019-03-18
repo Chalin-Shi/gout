@@ -8,8 +8,8 @@ import (
 	"github.com/fvbock/endless"
 	"github.com/robfig/cron"
 
-	"gout/libs/setting"
-	"gout/routers"
+	"github.com/Chalin-Shi/gout/libs/setting"
+	"github.com/Chalin-Shi/gout/routers"
 )
 
 func main() {

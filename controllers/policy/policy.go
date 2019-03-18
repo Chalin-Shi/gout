@@ -7,8 +7,8 @@ import (
   "github.com/casbin/casbin"
   "github.com/gin-gonic/gin"
 
-  "gout/libs/e"
-  "gout/libs/logging"
+  "github.com/Chalin-Shi/gout/libs/e"
+  "github.com/Chalin-Shi/gout/libs/logging"
 )
 
 type Policy struct {

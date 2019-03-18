@@ -5,7 +5,7 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 
-	"gout/libs/setting"
+	"github.com/Chalin-Shi/gout/libs/setting"
 )
 
 type Claims struct {
